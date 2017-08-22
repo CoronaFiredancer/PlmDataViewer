@@ -7,16 +7,16 @@ using PlmConnector.Models;
 
 namespace PlmConnector.Services
 {
-	class PartsService : IPartsService
+	public class PartsService : IPartsService
 	{
 		public Part GetByItemNumber(string itemNumber)
 		{
-			throw new NotImplementedException();
+			return new Part{ItemNumber = itemNumber, Name = "stub"};
 		}
 
 		public IEnumerable<Part> GetAll()
 		{
-			throw new NotImplementedException();
+			return new List<Part>();
 		}
 	}
 }

@@ -24,17 +24,17 @@ namespace WebApplication3.Controllers
 		    _partsService = partsService;
 	    }
 
-	    public IHttpActionResult Get(string itemNumber)
+	    public IHttpActionResult Get(string id)
 	    {
 
-			var part = new Part{ItemNumber = itemNumber};
+		    var part = _partsService.GetByItemNumber(id);
 
 		    return Ok(part);
 	    }
 
 	    public IEnumerable<Part> Get()
 	    {
-		    var partList = new List<Part>();
+		    var partList = _partsService.GetAll();
 
 		    return partList;
 	    }
