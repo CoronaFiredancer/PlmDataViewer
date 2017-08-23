@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Aras.IOM;
 using PlmConnector.Connectors;
 using PlmConnector.Models;
@@ -12,7 +8,7 @@ namespace PlmConnector.Services
 	public class PartsService : IPartsService
 	{
 		private readonly IConnector _plmConnector;
-		private Innovator _inn;
+		private readonly Innovator _inn;
 
 		public PartsService(IConnector plmConnector)
 		{
@@ -36,7 +32,7 @@ namespace PlmConnector.Services
 			var bomRel = item.createRelationship("Part BOM", "get");
 			var bompart = bomRel.createRelatedItem("Part", "get");
 			var amlRel = bompart.createRelationship("Part AML", "get");
-			var amlPart = amlRel.createRelatedItem("Manufacturer Part", "get");
+			amlRel.createRelatedItem("Manufacturer Part", "get");
 
 
 
@@ -50,19 +46,42 @@ namespace PlmConnector.Services
 
 				var bomParts = new List<BomPart>();
 
-				for (int i = 0; i < relCount; i++)
+				for (var i = 0; i < relCount; i++)
 				{
 					var rel = bomRelationships.getItemByIndex(i);
 
-					var related = rel.getPropertyItem("related_id");
-
-
+					var relatedItem = rel.getPropertyItem("related_id");
+					
 					var bomPart = new BomPart
 					{
-						ItemNumber = related.getProperty("item_number"), // fra related_id
+						ItemNumber = relatedItem.getProperty("item_number"),
 						Quantity = rel.getProperty("quantity"),
-						RefDes = rel.getProperty("reference_designator")
+						RefDes = rel.getProperty("reference_designator"),
 					};
+
+					relatedItem.fetchRelationships("Part AML");
+					var amlRelationships = relatedItem.getRelationships();
+					var amlCount = amlRelationships.getItemCount();
+
+					var amlParts = new List<ManufacturerPart>();
+
+					for (var j = 0; j < amlCount; j++)
+					{
+						var amlRelItem = amlRelationships.getItemByIndex(j);
+						var amlRelatedItem = amlRelItem.getPropertyItem("related_id");
+
+						var manuf = amlRelatedItem.getPropertyAttribute("manufacturer", "keyed_name");
+
+						var mfgPart = new ManufacturerPart
+						{
+							ItemNumber = amlRelatedItem.getProperty("item_number"),
+							Manufacturer = manuf
+						};
+
+						amlParts.Add(mfgPart);
+					}
+
+					bomPart.ManufacturerParts = amlParts;
 
 					bomParts.Add(bomPart);
 				}
@@ -90,9 +109,6 @@ namespace PlmConnector.Services
 					KamUom = item.getProperty("kam_uom"),
 					BomParts = bomParts
 				};
-
-
-				//var serialized = part.SerializeJson();
 
 				return part;
 			}

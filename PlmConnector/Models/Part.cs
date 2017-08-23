@@ -27,21 +27,19 @@ namespace PlmConnector.Models
 		public string MinorRev { get; set; }
 
 		public List<BomPart> BomParts { get; set; }
-
 	}
 
 	public class BomPart
 	{
-		public string RefDes { get; set; }
 		public string ItemNumber { get; set; }
 		public string Quantity { get; set; }
+		public string RefDes { get; set; }
 		public List<ManufacturerPart> ManufacturerParts { get; set; }
 	}
 
 	public class ManufacturerPart
 	{
 		public string ItemNumber { get; set; }
-		public string Name { get; set; }
 		public string Manufacturer { get; set; }
 	}
 }
