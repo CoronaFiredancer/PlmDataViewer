@@ -13,11 +13,7 @@ namespace WebApplication3.Controllers
 {
     public class PartsController : ApiController
     {
-	    private KamInnovatorItem Item { get; set; }
-	    private IPartsService _partsService;
-
-		//ref the IOM.dll
-		//each GET call should use the IOM to fetch data from PLM
+	    private readonly IPartsService _partsService;
 
 	    public PartsController(IPartsService partsService)
 	    {

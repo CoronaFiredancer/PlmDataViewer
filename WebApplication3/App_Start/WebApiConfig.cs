@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Reflection;
 using System.Web.Http;
 using Autofac;
 using Autofac.Integration.WebApi;
+using PlmConnector.Connectors;
 using PlmConnector.Services;
 
 namespace WebApplication3
@@ -17,13 +19,11 @@ namespace WebApplication3
 			var builder = new ContainerBuilder();
 	        builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
 
-	        builder.RegisterType<PartsService>().As<IPartsService>();
+	        builder.RegisterType<ArasConnector>().As<IConnector>().SingleInstance();
+			builder.RegisterType<PartsService>().As<IPartsService>().InstancePerLifetimeScope();
 
 	        var container = builder.Build();
 			config.DependencyResolver = new AutofacWebApiDependencyResolver(container);
-
-
-
 
             // Web API configuration and services
 

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
 using Aras.IOM;
 using PlmConnector.Services;
@@ -10,6 +11,28 @@ namespace PlmConnector.Connectors
 		public List<KeyValuePair<string, string>> Config { get; set; }
 		public HttpServerConnection ServerConnection { get; set; }
 		public event LoggedEventHandler Logged;
+
+		public ArasConnector()
+		{
+			Config = new List<KeyValuePair<string, string>>();
+			var appSettings = ConfigurationManager.AppSettings;
+
+			if (appSettings.Count == 0)
+			{
+
+			}
+			else
+			{
+				foreach (var key in appSettings.AllKeys)
+				{
+
+					if (key.StartsWith("innovator"))
+					{
+						Config.Add(new KeyValuePair<string, string>(key, appSettings[key]));
+					}
+				}
+			}
+		}
 
 		public HttpServerConnection Connect()
 		{
