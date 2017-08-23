@@ -5,8 +5,6 @@ namespace PlmConnector.Models
 	public class Part
 	{
 		public string ItemNumber { get; set; }
-		public string User { get; set; }
-		public string Revision { get; set; }
 		public string Id { get; set; }
 
 		public string Classification { get; set; }
@@ -34,13 +32,9 @@ namespace PlmConnector.Models
 
 	public class BomPart
 	{
-		public string Parent { get; set; }
-		public string KamBomRef { get; set; }
+		public string RefDes { get; set; }
 		public string ItemNumber { get; set; }
-
 		public string Quantity { get; set; }
-		public string KamStructureType { get; set; }
-
 		public List<ManufacturerPart> ManufacturerParts { get; set; }
 	}
 
